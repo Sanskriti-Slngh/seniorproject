@@ -21,11 +21,11 @@ class BaseModel:
 
     # save model
     def save(self, i=''):
-        torch.save(self.model.state_dict(), f"/Users/tiyasingh/Desktop/seniorproject/models/epoch_{i}.pt")
+        torch.save(self.model.state_dict(), f"models/epoch_{i}.pt")
 
     # load model
     def load_model(self, i=''):
-        checkpoint_path = f"/Users/tiyasingh/Desktop/seniorproject/models/epoch_{i}.pt"
+        checkpoint_path = f"models/epoch_{i}.pt"
 
         with open(checkpoint_path, 'rb') as f:
             buffer = io.BytesIO(f.read())
@@ -39,12 +39,12 @@ class BaseModel:
         self.optimizer = optim.Adam(self.model.parameters(), lr=lr)
 
     # train the model
-    def train(self, num_epochs, dataloader):
+    def train(self, num_epochs, trainloader, valloader):
         for epoch in range(num_epochs):
             # Set the model to training mode
             self.model.train()
 
-            for batch_idx, (inputs, labels) in enumerate(dataloader):
+            for batch_idx, (inputs, labels) in enumerate(trainloader):
                 self.optimizer.zero_grad()  # Zero the gradients
 
                 outputs = self.model(inputs)
@@ -54,12 +54,16 @@ class BaseModel:
 
                 # Print training progress
                 if batch_idx % 100 == 0:  # Adjust the frequency of printing as needed
-                    print(f'Epoch {epoch}/{num_epochs}, Batch {batch_idx}/{len(dataloader)}, Loss: {loss.item()}')
+                    print(f'Epoch {epoch}/{num_epochs}, Batch {batch_idx}/{len(trainloader)}, Loss: {loss.item()}')
+
+            print("\nAccuracy for train set with current model: " + str(self.predict_model(trainloader)))
+            print("Accuracy for validation set with current model: " + str(self.predict_model(valloader))+"\n")
 
     # evaluate the model
     def evaluate(self, data_loader):
         # Mapping from numerical labels to actual labels
         num2label = {
+            0: 'nothing',
             1: 'flush',
             2: 'wash',
             3: 'shower',
@@ -85,8 +89,8 @@ class BaseModel:
                 for i in inputs.tolist():
                     x_s.append(i)
                 # Convert outputs to a list and append to y_s
-                for i in _.tolist():
-                    y_s.append(i.index(1.0))
+                for j in _.tolist():
+                    y_s.append(j.index(1.0))
 
                 # Forward pass through the model
                 outputs = self.model(inputs)
@@ -139,4 +143,4 @@ class BaseModel:
             accuracy = correct_predictions / total_predictions
             return accuracy
 
-        print(calculate_accuracy(y_pred, y_true))
+        return (calculate_accuracy(y_pred, y_true))
