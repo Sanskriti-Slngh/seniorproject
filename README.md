@@ -18,11 +18,51 @@
 - `EVALUATE = True`: Generates a plot of water meter changes over time, titled with real and predicted appliances turned on at that moment.
 - `ACCURACY = True`: Shows the accuracy performance of the model on the dataset.
 
+## EXAMPLES:
+- **TRAIN MODEL `main.py` PARAMETERS:**
+    ```
+    lr = 0.000001
+    batch_size = 32
+    epochs = 100
+    model_name = "fnn"
+    train = True
+    val = False
+    test = False
+    evaluate = False
+    accuracy = False
+    ```
+
+- **FIND ACCURACY OF MODEL ON VALIDATION AND TEST SET `main.py` PARAMETERS:**
+    ```
+    lr = 0.000001
+    batch_size = 32
+    epochs = 100
+    model_name = "fnn"
+    train = False
+    val = True
+    test = True
+    evaluate = False
+    accuracy = True
+    ```
+
+- **VISUALIZE PERFORMANCE OF MODEL ON VALIDATION AND TEST SET `main.py` PARAMETERS:**
+    ```
+    lr = 0.000001
+    batch_size = 32
+    epochs = 100
+    model_name = "fnn"
+    train = False
+    val = True
+    test = True
+    evaluate = True
+    accuracy = False
+    ```
+
 ## FILE OVERVIEW
 
-- `main.py`: Main file combining all files/classes together and serving as the main control source.
+- **`main.py`**: Main file combining all files/classes together and serving as the main control source.
 
-- `base_model.py`: Contains all functions compatible with future models (senior project).
+- **`base_model.py`**: Contains all functions compatible with future models (senior project).
     - FUNCTIONS:
         - `compile(learning rate)`
         - `save(epoch number if needed)`
@@ -33,23 +73,23 @@
     - CLASSES:
         - `BaseModel`
 
-- `fnn.py`: Model architecture used for model training.
+- **`fnn.py`**: Model architecture used for model training.
     - FUNCTIONS:
         - `forward(layer)`
     - CLASSES:
         - `MLP()`
 
-- `meter_reading.py`: Generates a text file that contains the meter readings (taken from Raspberry Pi).
-    - Creates "../senior_project/meter_data.txt"
+- **`meter_reading.py`**: Generates a text file that contains the meter readings (taken from Raspberry Pi).
+    - Creates "data/meter_data.txt"
     - FUNCTIONS:
         - `sample_data()`
         - `get_reading()`
 
-- `data_process.py`: Generates the datasets used for model training/testing and data generator.
-    - Uses "../senior_project/meter_data.txt"
-    - Uses "../senior_project/water_spreadsheet.txt"
-    - Creates "../senior_project/data_train.pickle"
-    - Creates "../senior_project/data_dev.pickle"
+- **`data_process.py`**: Generates the datasets used for model training/testing and data generator.
+    - Uses "data/meter_data.txt"
+    - Uses "data/water_spreadsheet.txt"
+    - Creates "data/data_train.pickle"
+    - Creates "data/data_dev.pickle"
     - FUNCTIONS:
         - `time_to_index(time)`
         - `gallons_to_dec(gallons)`
@@ -58,15 +98,26 @@
         - `order_sum(lst)`
         - `isfloat(num)`
 
-- `datagenerator.py`: Builds a data loader for the PyTorch model(s).
+- **`datagenerator.py`**: Builds a data loader for the PyTorch model(s).
     - CLASSES:
         - `CSVDataset()`
 
-- `meter_reading.py`: Gets the data straight from the meter.
-    - Creates "../senior_project/meter_data.txt"
-    - FUNCTIONS:
-        - `sample_data()`
-        - `get_reading()`
-
 ## DATA
-Self-built data is attached in the submission.
+Self-built data is attached in the zip file under the "data" folder:
+- **`meter_data.txt`:**
+  The date/time and the corresponding meter reading.
+- **`water_spreadsheet.txt`:**
+  The date/time (start/end) and the appliance that was turned on.
+- **`data_dev.pickle`:**
+  The dataset created using the .txt files for validation and testing.
+- **`data_train.pickle`:**
+  The dataset created using the .txt files for training.
+
+## MODELS
+Each trained model is saved here:
+- **`epoch_.pt`:**
+  The final model to train/validate/test.
+
+## VISUALS
+The output screenshots.
+
